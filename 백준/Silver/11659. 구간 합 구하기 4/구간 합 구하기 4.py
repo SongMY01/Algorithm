@@ -2,15 +2,17 @@ import sys
 input = sys.stdin.readline
 
 n, m = map(int, input().split())
-nums = list(map(int, input().split()))
+arr = list(map(int, input().split()))
 
-# 누적합 배열
-prefix = [0] * (n + 1)
+pre_sum = [0]
+temp = 0
+for i in arr:
+    temp += i
+    pre_sum.append(temp)
 
-for i in range(1, n + 1):
-    prefix[i] = prefix[i - 1] + nums[i - 1]
-
-# 쿼리 처리
+out = []
 for _ in range(m):
-    i, j = map(int, input().split())
-    print(prefix[j] - prefix[i - 1])
+    x, y = map(int, input().split())
+    out.append(str(pre_sum[y] - pre_sum[x-1]))
+
+print("\n".join(out))
