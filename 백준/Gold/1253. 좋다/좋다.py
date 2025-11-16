@@ -2,25 +2,32 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
-result = 0
 arr = list(map(int, input().split()))
-arr.sort()    
-    
-for k in range(n):
-    find = arr[k]
-    i=0
-    j=n-1
-    while i<j:
-        if arr[i] + arr[j] == find:
-            if i!=k and j!=k:
-                result += 1
-                break
-            elif i==k:
-                i += 1
-            elif j==k:
-                j -= 1
-        elif arr[i] + arr[j] < find:
-            i += 1
+arr.sort()
+
+count = 0
+
+for i in range(n):
+    target = arr[i]
+    left = 0
+    right = n - 1
+
+    while left < right:
+        if left == i:
+            left += 1
+            continue
+        if right == i:
+            right -= 1
+            continue
+
+        s = arr[left] + arr[right]
+
+        if s == target:
+            count += 1
+            break
+        elif s < target:
+            left += 1
         else:
-            j -= 1
-print(result)
+            right -= 1
+
+print(count)
