@@ -1,38 +1,38 @@
 from collections import deque
+import sys
+input = sys.stdin.readline
 
-# 입력
 n, m = map(int, input().split())
-graph = [list(map(int, input().strip())) for _ in range(n)]
 
-# 방향: 상하좌우
+graph = [list(input().strip()) for _ in range(n)]
+
 dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+dy = [0, 0, 1, -1]
+
+# 거리 배열
+dist = [[0] * m for _ in range(n)]
 
 def bfs(x, y):
     queue = deque()
     queue.append((x, y))
+    dist[x][y] = 1   # 시작 거리는 1
 
     while queue:
-        x, y = queue.popleft()
+        cur_x, cur_y = queue.popleft()
+
+        # 목적지 도착 → 바로 거리 반환
+        if cur_x == n-1 and cur_y == m-1:
+            return dist[cur_x][cur_y]
 
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
 
-            # 범위 벗어나면 무시
-            if nx < 0 or ny < 0 or nx >= n or ny >= m:
-                continue
+            if 0 <= nx < n and 0 <= ny < m:
+                if graph[nx][ny] == '1' and dist[nx][ny] == 0:
+                    dist[nx][ny] = dist[cur_x][cur_y] + 1
+                    queue.append((nx, ny))
 
-            # 벽이면 무시
-            if graph[nx][ny] == 0:
-                continue
-
-            # 처음 가는 길이면 거리 갱신
-            if graph[nx][ny] == 1:
-                graph[nx][ny] = graph[x][y] + 1
-                queue.append((nx, ny))
-
-    # 마지막 칸의 값이 최소 거리
-    return graph[n-1][m-1]
+    return dist[n-1][m-1]
 
 print(bfs(0, 0))
